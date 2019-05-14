@@ -1,5 +1,5 @@
-#include "libft.h"
 #include "get_next_line.h"
+#include "libft.h"
 #include <stdio.h>
 
 
@@ -70,27 +70,22 @@ void	clean_up(t_list *node, t_list *lst)
 	}
 }
 
-int		content_handler(t_list *node, char **line, t_list *lst)
+int		content_handler(t_list *node, char **line)
 {
 	int		ndist;
 	int		dist;
+	char	*temp;
 
-	if (node->content)
-	{
-		ndist = ft_strclen(node->content, '\n');
-		dist = ft_strlen(node->content);
-	}
-	else
-	{
+	ndist = ft_strclen(node->content, '\n');
+	dist = ft_strlen(node->content);
+	if (!dist)
 		return (0);
-	}
-	if ((ndist < dist))
-	{
-		*line = ft_strsub(node->content, 0, ndist);
-		node->content = ft_strsub(node->content, ndist + 1, dist - ndist);
-		return (1);
-	}
-	return (0);			
+	*line = ft_strsub(node->content, 0, ndist);
+	temp = node->content;
+	node->content = ft_strsub(node->content, ndist + 1, dist - ndist);
+	if (temp)
+		free(temp);
+	return(1);
 }
 
 int		get_next_line(const int fd, char **line)
@@ -99,11 +94,17 @@ int		get_next_line(const int fd, char **line)
 	t_list			*node;
 	int				n;
 	int				r;
+
+	if (fd < 0 || line == NULL)
+		return (-1);
+	n = 0;
 	node = fd_handler(fd, &lst);
 	if ((r = string_constructor(node)) == -1)
 		return (-1);
-	n = content_handler(node, line, lst);
+	if ((n = content_handler(node, line)) == 0)
+	{
+		*line = NULL;
+		clean_up(node, lst);
+	}
 	return (n);
 }
-
-
