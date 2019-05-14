@@ -1,7 +1,16 @@
-#include "get_next_line.h"
-#include "libft.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smaddox <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/14 13:45:28 by smaddox           #+#    #+#             */
+/*   Updated: 2019/05/14 14:40:27 by smaddox          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "get_next_line.h"
 
 t_list	*fd_handler(const int fd, t_list **lst)
 {
@@ -26,7 +35,7 @@ int		string_constructor(t_list *node)
 {
 	char	*str;
 	char	*content;
-	int 	r;
+	int		r;
 	char	buffer[BUFF_SIZE + 1];
 
 	ft_bzero(buffer, BUFF_SIZE + 1);
@@ -34,7 +43,7 @@ int		string_constructor(t_list *node)
 	{
 		str = ft_strdup(buffer);
 		content = node->content;
-		if(node->content)
+		if (node->content)
 		{
 			node->content = ft_strjoin(content, str);
 			if (content)
@@ -43,11 +52,9 @@ int		string_constructor(t_list *node)
 				free(str);
 		}
 		else
-		{
 			node->content = str;
-		}
 		if (ft_strclen(buffer, '\n') < BUFF_SIZE)
-			break;
+			break ;
 		ft_bzero(buffer, BUFF_SIZE + 1);
 	}
 	return (r);
@@ -56,7 +63,7 @@ int		string_constructor(t_list *node)
 void	clean_up(t_list *node, t_list *lst)
 {
 	t_list *temp;
-	
+
 	temp = lst;
 	if (!(node == lst))
 	{
@@ -85,7 +92,7 @@ int		content_handler(t_list *node, char **line)
 	node->content = ft_strsub(node->content, ndist + 1, dist - ndist);
 	if (temp)
 		free(temp);
-	return(1);
+	return (1);
 }
 
 int		get_next_line(const int fd, char **line)
